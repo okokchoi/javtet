@@ -2,33 +2,8 @@ var Vector = (function () {
     "use strict";
 
     var Vector = function (x, y) {
-        this.x = x || 0;
-        this.y = y || 0;
-    };
-
-    // return the angle of the vector in radians
-    Vector.prototype.getDirection = function () {
-        return Math.atan2(this.y, this.x);
-    };
-
-    // set the direction of the vector in radians
-    Vector.prototype.setDirection = function (direction) {
-        var magnitude = this.getMagnitude();
-        this.x = Math.cos(direction) * magnitude;
-        this.y = Math.sin(direction) * magnitude;
-    };
-
-    // get the magnitude of the vector
-    Vector.prototype.getMagnitude = function () {
-        // use pythagoras theorem to work out the magnitude of the vector
-        return Math.sqrt(this.x * this.x + this.y * this.y);
-    };
-
-    // set the magnitude of the vector
-    Vector.prototype.setMagnitude = function (magnitude) {
-        var direction = this.getDirection();
-        this.x = Math.cos(direction) * magnitude;
-        this.y = Math.sin(direction) * magnitude;
+        this.x = Math.floor(x || 0);
+        this.y = Math.floor(y || 0);
     };
 
     // add two vectors together and return a new one
@@ -60,8 +35,8 @@ var Vector = (function () {
 
     // multiply this vector by the scalar
     Vector.prototype.multiplyBy = function (scalar) {
-        this.x *= scalar;
-        this.y *= scalar;
+        this.x = Math.floor(this.x * scalar);
+        this.y = Math.floor(this.y * scalar);
     };
 
     // scale this vector by scalar and return a new vector
@@ -71,16 +46,9 @@ var Vector = (function () {
 
     // scale this vector by scalar
     Vector.prototype.divideBy = function (scalar) {
-        this.x /= scalar;
-        this.y /= scalar;
+        this.x = Math.floor(this.x / scalar);
+        this.y = Math.floor(this.y / scalar);
     };
-
-    // Aliases
-    Vector.prototype.getLength = Vector.prototype.getMagnitude;
-    Vector.prototype.setLength = Vector.prototype.setMagnitude;
-
-    Vector.prototype.getAngle = Vector.prototype.getDirection;
-    Vector.prototype.setAngle = Vector.prototype.setDirection;
 
     // Utilities
     Vector.prototype.copy = function () {
