@@ -16,6 +16,13 @@ var Board = (function () {
         }, true);
     };
 
+    /*
+        coordinates origin is left bottom.
+        it is form of well, (floor, walls but no ceiling)
+        width and height indicates size of field.
+        so that height != well height == infinite
+    */
+
     // constructor
     function Board(w, h) {
         var j, i, spawnPoint;
@@ -32,6 +39,7 @@ var Board = (function () {
             }
         }
 
+        // FIXME spawn.y should be movable
         spawnPoint = new Vector(this.width / 2, this.height - 1);
         // array of currently movable cells (aka block)
         this.nowBlock = this.blocks.random().map(function (v) {
@@ -71,9 +79,17 @@ var Board = (function () {
         enumerable: false
     });
 
+    // check if you can fill the position (assuming infinite height)
+    Board.prototype.oktoFill = function (v) {
+        if (0 <= v.x && v.x < this.width && 0 <= v.y) {
+            return !this.cells[v.y] || !this.cells[v.y][v.x];
+        }
+        return false;
+    };
+
     // print board to page
     Board.prototype.print = function () {
-        var i, j, oldfield, newfield, tr, td, fc, h;
+        var i, j, oldfield, newfield, tr, td, fc, h, ok;
         newfield = document.createElement("tbody");
         newfield.id = "field";
 
@@ -91,8 +107,11 @@ var Board = (function () {
         // current block
         fc = this.fillChar;
         h = this.height;
+        ok = this.oktoFill.bind(this);
         this.nowBlock.forEach(function (v) {
-            newfield.children[h - v.y].children[v.x].textContent = fc;
+            if (ok(v) && v.y < h) {
+                newfield.children[h - 1 - v.y].children[v.x].textContent = fc;
+            }
         });
 
         document.getElementById("field").replaceWith(newfield);
