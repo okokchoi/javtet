@@ -28,6 +28,31 @@ var Board = (function () {
     Board.prototype.fillChar = '■';
     Board.prototype.emptyChar = '□';
 
+    Board.prototype.blocks = {
+        "O": [
+            new Vector(-1, 0),
+            new Vector(0, 0),
+            new Vector(-1, 1),
+            new Vector(0, 1)
+        ],
+
+        "I": [
+            new Vector(-2, 0),
+            new Vector(-1, 0),
+            new Vector(0, 0),
+            new Vector(1, 0)
+        ],
+
+        random: undefined
+    };
+
+    Object.defineProperty(Board.prototype.blocks, "random", {
+        value: function () {
+            return Board.prototype.blocks.pickRandomEnum().slice();
+        },
+        enumerable: false
+    });
+
     Board.prototype.print = function () {
         var i, j, oldfield, newfield, tr, td;
         newfield = document.createElement("tbody");
