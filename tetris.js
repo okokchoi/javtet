@@ -113,7 +113,7 @@ var Board = (function () {
     // check if you can fill the position (assuming infinite height)
     Board.prototype.oktoFill = function (v) {
         if (0 <= v.x && v.x < this.width && 0 <= v.y) {
-            return !this.cells[v.y] || !this.cells[v.y][v.x];
+            return this.cells.length <= v.y || !this.cells[v.y][v.x];
         }
         return false;
     };
