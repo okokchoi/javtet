@@ -3,6 +3,13 @@ var Vector;
 var Board = (function () {
     "use strict";
 
+    // extend standard Object with helper function
+    // picks random element within enumerable attribute
+    Object.prototype.pickRandomEnum = function () {
+        var keys = Object.keys(this);
+        return this[keys[Math.floor(Math.random() * (keys.length))]];
+    };
+
     function Board(w, h) {
         this.width = w;
         this.height = h;
