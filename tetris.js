@@ -139,3 +139,26 @@ var Board = (function () {
 
     return Board;
 }());
+
+var board = new Board(6, 10);
+window.addEventListener('keydown', function (event) {
+    function mv(x, y) {
+        if (board.moveNow(new Vector(x, y))) {
+            board.print()
+        }
+    }
+    switch (event.keyCode) {
+        case 39: // Right
+            mv(1, 0);
+            break;
+        case 37: //Left
+            mv(-1, 0);
+            break;
+        case 40: // Down
+            mv(0, -1);
+            break;
+        case 38: // Up -- TODO only for debugging purpose
+            mv(0, 1);
+            break;
+    }
+}, false);
