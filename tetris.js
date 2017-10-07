@@ -18,6 +18,20 @@ var Board = (function () {
         }, true);
     };
 
+    // same as `[x] * n` in python
+    function repeat(x, n) {
+        var arr, i;
+        arr = [];
+        for (i = 0; i < n; i += 1) {
+            if (typeof x === 'object') {
+                arr.push(Object.assign({}, x));
+            } else {
+                arr.push(x);
+            }
+        }
+        return arr;
+    }
+
     HTMLElement.prototype.appendNewChild = function (type) {
         var child = document.createElement(type);
         this.appendChild(child);
@@ -36,19 +50,15 @@ var Board = (function () {
     // h: visible well height
     // div: division id to print game on
     function Board(w, h, div) {
-        var j, i, spawnPoint;
+        var spawnPoint, row;
 
         this.width = w;
         this.height = h;
 
-        // clear board
-        this.cells = [];
-        for (j = 0; j < h; j += 1) {
-            this.cells[j] = [];
-            for (i = 0; i < w; i += 1) {
-                this.cells[j][i] = false;
-            }
-        }
+        // allocate the cells, initialize as empty
+        // FIXME don't need to allocate'em all, we can allocate as we need them.
+        row = repeat(false, this.width);
+        this.cells = repeat(row, this.height);
 
         // FIXME spawn.y should be movable
         spawnPoint = new Vector(this.width / 2, this.height - 1);
