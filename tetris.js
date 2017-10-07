@@ -15,7 +15,27 @@ var Board = (function () {
                 this.cells[j][i] = false;
             }
         }
+
+        this.fillChar = '■';
+        this.emptyChar = '□';
     }
+
+    Board.prototype.print = function () {
+        var i, j, oldfield, newfield, tr, td;
+        newfield = document.createElement("tbody");
+        newfield.id = "field";
+
+        for (j = this.height - 1; j >= 0; j -= 1) {
+            tr = document.createElement("tr");
+            for (i = 0; i < this.width; i += 1) {
+                td = document.createElement("td");
+                td.textContent = this.cells[j][i] ? this.fillchar : this.emptyChar;
+                tr.appendChild(td);
+            }
+            newfield.appendChild(tr);
+        }
+        document.getElementById("field").replaceWith(newfield);
+    };
 
     return Board;
 }());
