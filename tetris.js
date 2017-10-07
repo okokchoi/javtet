@@ -10,12 +10,14 @@ var Board = (function () {
         return this[keys[Math.floor(Math.random() * (keys.length))]];
     };
 
+    // constructor
     function Board(w, h) {
         var j, i, spawnPoint;
 
         this.width = w;
         this.height = h;
 
+        // clear board
         this.cells = [];
         for (j = 0; j < h; j += 1) {
             this.cells[j] = [];
@@ -25,14 +27,17 @@ var Board = (function () {
         }
 
         spawnPoint = new Vector(this.width / 2, this.height - 1);
+        // array of currently movable cells (aka block)
         this.nowBlock = this.blocks.random().map(function (v) {
             return v.add(spawnPoint);
         });
     }
 
+    // static standard tiles
     Board.prototype.fillChar = '■';
     Board.prototype.emptyChar = '□';
 
+    // static standard block forms
     Board.prototype.blocks = {
         "O": [
             new Vector(-1, 0),
@@ -51,6 +56,8 @@ var Board = (function () {
         random: undefined
     };
 
+    // this function is not enumerable
+    // return new copy of randomly pick blocks
     Object.defineProperty(Board.prototype.blocks, "random", {
         value: function () {
             return Board.prototype.blocks.pickRandomEnum().slice();
@@ -58,11 +65,13 @@ var Board = (function () {
         enumerable: false
     });
 
+    // print board to page
     Board.prototype.print = function () {
         var i, j, oldfield, newfield, tr, td, fc, h;
         newfield = document.createElement("tbody");
         newfield.id = "field";
 
+        // stacked blocks
         for (j = this.height - 1; j >= 0; j -= 1) {
             tr = document.createElement("tr");
             for (i = 0; i < this.width; i += 1) {
@@ -73,6 +82,7 @@ var Board = (function () {
             newfield.appendChild(tr);
         }
 
+        // current block
         fc = this.fillChar;
         h = this.height;
         this.nowBlock.forEach(function (v) {
