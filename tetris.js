@@ -60,12 +60,7 @@ var Board = (function () {
         row = repeat(false, this.width);
         this.cells = repeat(row, this.height);
 
-        // FIXME spawn.y should be movable
-        spawnPoint = new Vector(this.width / 2, this.height - 1);
-        // array of currently movable cells (aka block)
-        this.nowBlock = this.blocks.random().map(function (v) {
-            return v.add(spawnPoint);
-        });
+        this.genRandomNow();
 
         this.divid = div || "tetris";
         div = document.getElementById(this.divid);
@@ -138,6 +133,37 @@ var Board = (function () {
         }
     };
 
+    // spawn random nowBlock at top of the field.
+    // TODO need to check game over
+    Board.prototype.genRandomNow = function () {
+        // FIXME spawn.y should be movable
+        var spawnPoint = new Vector(this.width / 2, this.height - 1);
+        // array of currently movable cells (aka block)
+        this.nowBlock = this.blocks.random().map(function (v) {
+            return v.add(spawnPoint);
+        });
+    };
+
+    Board.prototype.step = function () {
+        var cells, need, row;
+        if (!this.moveNow(new Vector(0, -1))) { // nowhere to down
+
+            // stack the current block
+            cells = this.cells;
+            this.nowBlock.forEach(function (v) {
+                if (cells.length <= v.y) { // need more
+                    need = v.y - cells.length;
+                    row = repeat(false, cells[0].length);
+                    cells.concat(repeat(row, need));
+                }
+                cells[v.y][v.x] = true;
+            });
+
+            this.genRandomNow();
+        }
+        this.print();
+    };
+
     // print board to page
     Board.prototype.print = function () {
         var i, j, oldWell, newWell, tr, td, fc, h, ok;
@@ -199,4 +225,8 @@ window.onload = function () {
                 break;
         }
     }, false);
+
+    window.setInterval(function () {
+        board.step();
+    }, 1500);
 }
