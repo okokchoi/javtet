@@ -96,7 +96,10 @@ var Vector = (function () {
     };
 
     Vector.prototype.toObject = function () {
-        return {x: this.x, y: this.y};
+        return {
+            x: this.x,
+            y: this.y
+        };
     };
 
     return Vector;

@@ -2,7 +2,7 @@ var Vector;
 
 var Board = (function () {
     "use strict";
-    
+
     function Board(w, h) {
         this.width = w;
         this.height = h;
