@@ -1,4 +1,4 @@
-(function () {
+var Vector = (function () {
     "use strict";
 
     var Vector = function (x, y) {
@@ -99,4 +99,5 @@
         return {x: this.x, y: this.y};
     };
 
+    return Vector;
 }());
