@@ -1,4 +1,6 @@
 var Vector;
+var console;
+var HTMLElement;
 
 var Board = (function () {
     "use strict";
@@ -16,15 +18,24 @@ var Board = (function () {
         }, true);
     };
 
+    HTMLElement.prototype.appendNewChild = function (type) {
+        var child = document.createElement(type);
+        this.appendChild(child);
+        return child;
+    };
+
     /*
         coordinates origin is left bottom.
         it is form of well, (floor, walls but no ceiling)
-        width and height indicates size of field.
+        width and height indicates size of well.
         so that height != well height == infinite
     */
 
     // constructor
-    function Board(w, h) {
+    // w: well width
+    // h: visible well height
+    // div: division id to print game on
+    function Board(w, h, div) {
         var j, i, spawnPoint;
 
         this.width = w;
@@ -45,6 +56,16 @@ var Board = (function () {
         this.nowBlock = this.blocks.random().map(function (v) {
             return v.add(spawnPoint);
         });
+
+        this.divid = div || "tetris";
+        div = document.getElementById(this.divid);
+        if (!div) {
+            console.log('could not find DOM element named "' + this.divid + '"');
+            console.assert(div);
+        }
+
+        // set html structure
+        div.appendNewChild("table").appendNewChild("tbody").className = "well";
     }
 
     // static standard tiles
@@ -109,9 +130,9 @@ var Board = (function () {
 
     // print board to page
     Board.prototype.print = function () {
-        var i, j, oldfield, newfield, tr, td, fc, h, ok;
-        newfield = document.createElement("tbody");
-        newfield.id = "field";
+        var i, j, oldWell, newWell, tr, td, fc, h, ok;
+        newWell = document.createElement("tbody");
+        newWell.className = "well";
 
         // stacked blocks
         for (j = this.height - 1; j >= 0; j -= 1) {
@@ -121,7 +142,7 @@ var Board = (function () {
                 td.textContent = this.cells[j][i] ? this.fillChar : this.emptyChar;
                 tr.appendChild(td);
             }
-            newfield.appendChild(tr);
+            newWell.appendChild(tr);
         }
 
         // current block
@@ -130,35 +151,42 @@ var Board = (function () {
         ok = this.oktoFill.bind(this);
         this.nowBlock.forEach(function (v) {
             if (ok(v) && v.y < h) {
-                newfield.children[h - 1 - v.y].children[v.x].textContent = fc;
+                newWell.children[h - 1 - v.y].children[v.x].textContent = fc;
             }
         });
 
-        document.getElementById("field").replaceWith(newfield);
+        document.getElementById(this.divid)
+            .getElementsByClassName("well")[0]
+            .replaceWith(newWell);
     };
 
     return Board;
 }());
 
-var board = new Board(6, 10);
-window.addEventListener('keydown', function (event) {
-    function mv(x, y) {
-        if (board.moveNow(new Vector(x, y))) {
-            board.print()
+var board;
+
+window.onload = function () {
+    board = new Board(6, 10);
+    board.print();
+    window.addEventListener('keydown', function (event) {
+        function mv(x, y) {
+            if (board.moveNow(new Vector(x, y))) {
+                board.print();
+            }
         }
-    }
-    switch (event.keyCode) {
-        case 39: // Right
-            mv(1, 0);
-            break;
-        case 37: //Left
-            mv(-1, 0);
-            break;
-        case 40: // Down
-            mv(0, -1);
-            break;
-        case 38: // Up -- TODO only for debugging purpose
-            mv(0, 1);
-            break;
-    }
-}, false);
+        switch (event.keyCode) {
+            case 39: // Right
+                mv(1, 0);
+                break;
+            case 37: //Left
+                mv(-1, 0);
+                break;
+            case 40: // Down
+                mv(0, -1);
+                break;
+            case 38: // Up -- TODO only for debugging purpose
+                mv(0, 1);
+                break;
+        }
+    }, false);
+}
