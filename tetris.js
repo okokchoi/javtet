@@ -11,10 +11,11 @@ var Board = (function () {
     };
 
     function Board(w, h) {
+        var j, i, spawnPoint;
+
         this.width = w;
         this.height = h;
 
-        var j, i;
         this.cells = [];
         for (j = 0; j < h; j += 1) {
             this.cells[j] = [];
@@ -23,6 +24,10 @@ var Board = (function () {
             }
         }
 
+        spawnPoint = new Vector(this.width / 2, this.height - 1);
+        this.nowBlock = this.blocks.random().map(function (v) {
+            return v.add(spawnPoint);
+        });
     }
 
     Board.prototype.fillChar = '■';
@@ -54,7 +59,7 @@ var Board = (function () {
     });
 
     Board.prototype.print = function () {
-        var i, j, oldfield, newfield, tr, td;
+        var i, j, oldfield, newfield, tr, td, fc, h;
         newfield = document.createElement("tbody");
         newfield.id = "field";
 
@@ -67,6 +72,13 @@ var Board = (function () {
             }
             newfield.appendChild(tr);
         }
+
+        fc = this.fillChar;
+        h = this.height;
+        this.nowBlock.forEach(function (v) {
+            newfield.children[h - v.y].children[v.x].textContent = fc;
+        });
+
         document.getElementById("field").replaceWith(newfield);
     };
 
