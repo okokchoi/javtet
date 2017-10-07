@@ -30,7 +30,7 @@ var Board = (function () {
             tr = document.createElement("tr");
             for (i = 0; i < this.width; i += 1) {
                 td = document.createElement("td");
-                td.textContent = this.cells[j][i] ? this.fillchar : this.emptyChar;
+                td.textContent = this.cells[j][i] ? this.fillChar : this.emptyChar;
                 tr.appendChild(td);
             }
             newfield.appendChild(tr);
