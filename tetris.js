@@ -16,9 +16,10 @@ var Board = (function () {
             }
         }
 
-        this.fillChar = '■';
-        this.emptyChar = '□';
     }
+
+    Board.prototype.fillChar = '■';
+    Board.prototype.emptyChar = '□';
 
     Board.prototype.print = function () {
         var i, j, oldfield, newfield, tr, td;
