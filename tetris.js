@@ -10,6 +10,12 @@ var Board = (function () {
         return this[keys[Math.floor(Math.random() * (keys.length))]];
     };
 
+    Array.prototype.all = function (f) {
+        return this.reduce(function (b, x) {
+            return b && f(x);
+        }, true);
+    };
+
     // constructor
     function Board(w, h) {
         var j, i, spawnPoint;
