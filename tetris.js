@@ -87,6 +87,26 @@ var Board = (function () {
         return false;
     };
 
+    // move nowBlock by amount of `v`
+    // returns if move was successful, nothing changes if false.
+    Board.prototype.moveNow = function (move) {
+        var laterBlock, ok;
+        ok = this.oktoFill.bind(this);
+        laterBlock = this.nowBlock.slice().map(function (v) {
+            var m = v.add(move);
+            return ok(m) ? m : null;
+        });
+
+        if (laterBlock.all(function (v) {
+                return v !== null;
+            })) {
+            this.nowBlock = laterBlock;
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     // print board to page
     Board.prototype.print = function () {
         var i, j, oldfield, newfield, tr, td, fc, h, ok;
