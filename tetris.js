@@ -2,6 +2,18 @@ var Vector;
 var console;
 var HTMLElement;
 
+/* Scheme of game display
+
+<div id="tetris" class="tetris">
+    <table class="well" style="color: darkgrey;">
+        <tbody class="well">...</tbody>
+    </table>
+    <button class="pause" onclick='board.toggleRun()'>
+        pause
+    </button>
+</div>
+*/
+
 var Board = (function () {
     "use strict";
 
