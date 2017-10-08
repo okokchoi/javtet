@@ -155,6 +155,19 @@ var Board = (function () {
                 cells[v.y][v.x] = true;
             });
 
+            // erase full rows
+            this.cells = cells.filter(function (bs) {
+                return !bs.all(function (b) {
+                    return b;
+                });
+            });
+
+            // FIXME I have to keep the size since `print` rely on cells
+            if (this.cells.length < this.height) {
+                this.resizeWell(this.height - this.cells.length);
+            }
+
+            // gen new block
             this.genRandomNow();
         }
         this.print();
