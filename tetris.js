@@ -47,7 +47,7 @@ var Board = (function () {
     // w: well width
     // h: visible well height
     // div: division id to print game on
-    function Board(w, h, div) {
+    function Board(w, h, div, keymap) {
         var wtbl, pbtn;
 
         this.width = w;
@@ -83,6 +83,8 @@ var Board = (function () {
         pbtn.onclick = this.toggleRun.bind(this);
 
         this.handle = null;
+
+        this.registerKeymap(keymap);
     }
 
     // static standard tiles
@@ -117,6 +119,16 @@ var Board = (function () {
         },
         enumerable: false
     });
+
+    // default keymap for interacte with game
+    Board.prototype.defaultKeymap = {
+        39: "right", // Right arrow
+        37: "left", // Left arrow
+        40: "down", // Down arrow
+        38: "up", // Up arrow -- only for debugging purpose
+        82: "rotate", // 'R'
+        85: "etator" // 'U'
+    };
 
     // check if you can fill the position (assuming infinite height)
     Board.prototype.oktoFill = function (v) {
@@ -163,6 +175,47 @@ var Board = (function () {
         } else {
             return false;
         }
+    };
+
+    Board.prototype.registerKeymap = function (keymap) {
+        var thos = this;
+        keymap = this.keymap = keymap || this.defaultKeymap;
+
+        function mv(x, y) {
+            if (thos.moveNow(new Vector(x, y))) {
+                thos.print();
+            }
+        }
+
+        function rt(d) {
+            if (thos.rotateNow(d)) {
+                thos.print();
+            }
+        }
+
+        window.addEventListener('keydown', function (event) {
+
+            switch (keymap[event.keyCode]) {
+                case "right":
+                    mv(1, 0);
+                    break;
+                case "left":
+                    mv(-1, 0);
+                    break;
+                case "down":
+                    mv(0, -1);
+                    break;
+                case "up":
+                    mv(0, 1);
+                    break;
+                case "rotate":
+                    rt(1);
+                    break;
+                case "etator":
+                    rt(-1);
+                    break;
+            }
+        }, false);
     };
 
     // spawn random nowBlock at top of the field.
@@ -291,38 +344,4 @@ var handle;
 window.onload = function () {
     board = new Board(6, 10);
     board.print();
-    window.addEventListener('keydown', function (event) {
-        function mv(x, y) {
-            if (board.moveNow(new Vector(x, y))) {
-                board.print();
-            }
-        }
-
-        function rt(d) {
-            board.rotateNow(d);
-            board.print();
-        }
-
-        switch (event.keyCode) {
-            case 39: // Right
-                mv(1, 0);
-                break;
-            case 37: //Left
-                mv(-1, 0);
-                break;
-            case 40: // Down
-                mv(0, -1);
-                break;
-            case 38: // Up -- TODO only for debugging purpose
-                mv(0, 1);
-                break;
-            case 82: // 'r'
-                rt(1);
-                break;
-            case 85: // 'u'
-                rt(-1);
-                break;
-
-        }
-    }, false);
 }
