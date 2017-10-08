@@ -36,7 +36,7 @@ var Board = (function () {
     // h: visible well height
     // div: division id to print game on
     function Board(w, h, div) {
-        var pbtn;
+        var wtbl, pbtn;
 
         this.width = w;
         this.height = h;
@@ -57,7 +57,11 @@ var Board = (function () {
 
         // set html structure
         div.className = "tetris";
-        div.appendNewChild("table").appendNewChild("tbody").className = "well";
+
+        wtbl = div.appendNewChild("table");
+        wtbl.className = "well";
+        wtbl.appendNewChild("tbody");
+
         pbtn = div.appendNewChild("button");
         pbtn.className = "pause";
         pbtn.textContent = "pause";
@@ -235,9 +239,11 @@ var Board = (function () {
     Board.prototype.toggleRun = function () {
         if (this.handle === null) {
             this.handle = window.setInterval(this.step.bind(this), 1500);
+            this.getElem(".well").style.color = "black";
         } else {
             window.clearInterval(this.handle);
             this.handle = null;
+            this.getElem(".well").style.color = "darkgrey";
         }
     };
 
