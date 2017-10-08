@@ -15,6 +15,7 @@ var Vector = (function () {
     Vector.prototype.addTo = function (v2) {
         this.x += v2.x;
         this.y += v2.y;
+        return this;
     };
 
     // subtract two vectors and reutn a new one
@@ -26,6 +27,7 @@ var Vector = (function () {
     Vector.prototype.subtractFrom = function (v2) {
         this.x -= v2.x;
         this.y -= v2.y;
+        return this;
     };
 
     // multiply this vector by a scalar and return a new one
@@ -37,6 +39,7 @@ var Vector = (function () {
     Vector.prototype.multiplyBy = function (scalar) {
         this.x = Math.floor(this.x * scalar);
         this.y = Math.floor(this.y * scalar);
+        return this;
     };
 
     // scale this vector by scalar and return a new vector
@@ -48,6 +51,7 @@ var Vector = (function () {
     Vector.prototype.divideBy = function (scalar) {
         this.x = Math.floor(this.x / scalar);
         this.y = Math.floor(this.y / scalar);
+        return this;
     };
 
     // Utilities
