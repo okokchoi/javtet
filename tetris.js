@@ -182,6 +182,10 @@ var Board = (function () {
         this.print();
     };
 
+    Board.prototype.getElem = function (name) {
+        return document.getElementById(this.divid).getElementsByClassName(name)[0];
+    };
+
     // print board to page
     Board.prototype.print = function () {
         var i, j, oldWell, newWell, tr, td, fc, h, ok;
@@ -209,9 +213,7 @@ var Board = (function () {
             }
         });
 
-        document.getElementById(this.divid)
-            .getElementsByClassName("well")[0]
-            .replaceWith(newWell);
+        this.getElem("well").replaceWith(newWell);
     };
 
     Board.prototype.toggleRun = function () {
