@@ -36,6 +36,8 @@ var Board = (function () {
     // h: visible well height
     // div: division id to print game on
     function Board(w, h, div) {
+        var pbtn;
+
         this.width = w;
         this.height = h;
 
@@ -54,7 +56,14 @@ var Board = (function () {
         }
 
         // set html structure
+        div.className = "tetris";
         div.appendNewChild("table").appendNewChild("tbody").className = "well";
+        pbtn = div.appendNewChild("button");
+        pbtn.className = "pause";
+        pbtn.textContent = "pause";
+        pbtn.onclick = this.toggleRun.bind(this);
+
+        this.handle = null;
     }
 
     // static standard tiles
@@ -205,10 +214,20 @@ var Board = (function () {
             .replaceWith(newWell);
     };
 
+    Board.prototype.toggleRun = function () {
+        if (this.handle === null) {
+            this.handle = window.setInterval(this.step.bind(this), 1500);
+        } else {
+            window.clearInterval(this.handle);
+            this.handle = null;
+        }
+    };
+
     return Board;
 }());
 
 var board;
+var handle;
 
 window.onload = function () {
     board = new Board(6, 10);
@@ -234,8 +253,4 @@ window.onload = function () {
                 break;
         }
     }, false);
-
-    window.setInterval(function () {
-        board.step();
-    }, 1500);
 }
