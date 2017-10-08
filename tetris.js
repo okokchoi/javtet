@@ -58,6 +58,9 @@ var Board = (function () {
         this.cells = [];
         this.resizeWell(this.height);
 
+        // Note. the first point of block is the anchor for rotation
+        // caution needed when modifying block.
+        this.block = undefined;
         this.genRandomNow();
 
         this.divid = div || "tetris";
@@ -87,18 +90,19 @@ var Board = (function () {
     Board.prototype.emptyChar = '□';
 
     // static standard block forms
+    // the first point is the anchor for rotation
     Board.prototype.blocks = {
         "O": [
-            new Vector(-1, 0),
             new Vector(0, 0),
+            new Vector(-1, 0),
             new Vector(-1, 1),
             new Vector(0, 1)
         ],
 
         "I": [
+            new Vector(0, 0),
             new Vector(-2, 0),
             new Vector(-1, 0),
-            new Vector(0, 0),
             new Vector(1, 0)
         ],
 
@@ -135,6 +139,25 @@ var Board = (function () {
         if (laterBlock.all(function (v) {
                 return v !== null;
             })) {
+            this.nowBlock = laterBlock;
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    Board.prototype.rotateNow = function (dir) {
+        var laterBlock, anchor;
+        dir /= Math.abs(dir);
+        anchor = this.nowBlock[0].copy();
+
+        laterBlock = this.nowBlock.slice().map(function (v) {
+            v = v.subtract(anchor);
+            v.y = -[v.x, v.x = v.y][0]; // swap
+            return v.multiplyBy(dir).addTo(anchor);
+        });
+
+        if (laterBlock.all(this.oktoFill.bind(this))) {
             this.nowBlock = laterBlock;
             return true;
         } else {
@@ -274,6 +297,12 @@ window.onload = function () {
                 board.print();
             }
         }
+
+        function rt(d) {
+            board.rotateNow(d);
+            board.print();
+        }
+
         switch (event.keyCode) {
             case 39: // Right
                 mv(1, 0);
@@ -287,6 +316,13 @@ window.onload = function () {
             case 38: // Up -- TODO only for debugging purpose
                 mv(0, 1);
                 break;
+            case 82: // 'r'
+                rt(1);
+                break;
+            case 85: // 'u'
+                rt(-1);
+                break;
+
         }
     }, false);
 }
