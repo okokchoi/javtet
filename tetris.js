@@ -182,8 +182,24 @@ var Board = (function () {
         this.print();
     };
 
-    Board.prototype.getElem = function (name) {
-        return document.getElementById(this.divid).getElementsByClassName(name)[0];
+    // find HTMLElement among children of `divid.
+    // .[name] indicates class name
+    // [name] indicates tag name
+    // sequence of names indicate descendants
+    // Note. each step of descendant search uses 'maximum munch' policy
+    Board.prototype.getElem = function (sels) {
+        var now = document.getElementById(this.divid);
+        sels.split(' ').forEach(function (sel) {
+            switch (sel[0]) {
+                case '.': // class
+                    now = now.getElementsByClassName(sel.slice(1))[0];
+                    break;
+                default: // tag
+                    now = now.getElementsByTagName(sel)[0];
+                    break;
+            }
+        });
+        return now;
     };
 
     // print board to page
@@ -213,7 +229,7 @@ var Board = (function () {
             }
         });
 
-        this.getElem("well").replaceWith(newWell);
+        this.getElem(".well tbody").replaceWith(newWell);
     };
 
     Board.prototype.toggleRun = function () {
