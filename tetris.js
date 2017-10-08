@@ -18,20 +18,6 @@ var Board = (function () {
         }, true);
     };
 
-    // same as `[x] * n` in python
-    function repeat(x, n) {
-        var arr, i;
-        arr = [];
-        for (i = 0; i < n; i += 1) {
-            if (typeof x === 'object') {
-                arr.push(Object.assign({}, x));
-            } else {
-                arr.push(x);
-            }
-        }
-        return arr;
-    }
-
     HTMLElement.prototype.appendNewChild = function (type) {
         var child = document.createElement(type);
         this.appendChild(child);
@@ -50,15 +36,13 @@ var Board = (function () {
     // h: visible well height
     // div: division id to print game on
     function Board(w, h, div) {
-        var spawnPoint, row;
-
         this.width = w;
         this.height = h;
 
         // allocate the cells, initialize as empty
         // FIXME don't need to allocate'em all, we can allocate as we need them.
-        row = repeat(false, this.width);
-        this.cells = repeat(row, this.height);
+        this.cells = [];
+        this.resizeWell(this.height);
 
         this.genRandomNow();
 
@@ -144,17 +128,29 @@ var Board = (function () {
         });
     };
 
+    // extend height of well by h
+    Board.prototype.resizeWell = function (h) {
+        var from, to, j, i;
+        from = this.cells.length;
+        to = h + this.cells.length;
+        for (j = from; j < to; j += 1) {
+            this.cells[j] = [];
+            for (i = 0; i < this.width; i += 1) {
+                this.cells[j][i] = false;
+            }
+        }
+    };
+
     Board.prototype.step = function () {
-        var cells, need, row;
+        var cells, need, row, ext;
         if (!this.moveNow(new Vector(0, -1))) { // nowhere to down
 
             // stack the current block
             cells = this.cells;
+            ext = this.resizeWell.bind(this);
             this.nowBlock.forEach(function (v) {
                 if (cells.length <= v.y) { // need more
-                    need = v.y - cells.length;
-                    row = repeat(false, cells[0].length);
-                    cells.concat(repeat(row, need));
+                    ext(v.y - cells.length + 1);
                 }
                 cells[v.y][v.x] = true;
             });
