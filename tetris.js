@@ -84,6 +84,8 @@ var Board = (function () {
 
         this.handle = null;
 
+        this.getElem().setAttribute("tabindex", 0);
+        this.keyListener = null;
         this.registerKeymap(keymap);
     }
 
@@ -185,6 +187,9 @@ var Board = (function () {
         var thos = this;
         keymap = this.keymap = keymap || this.defaultKeymap;
 
+        // FIXME these should be private function
+        // but they don't have to be evaluated at every
+        // invocation of registerKeymap function
         function mv(x, y) {
             if (thos.moveNow(new Vector(x, y))) {
                 thos.print();
@@ -197,9 +202,12 @@ var Board = (function () {
             }
         }
 
-        window.addEventListener('keydown', function (event) {
+        if (this.keyListener !== null) {
+            this.getElem().removeEventListener('keydown', this.keyListener, false);
+        }
 
-            switch (keymap[event.keyCode]) {
+        this.keyListener = (function (event) {
+            switch (this.keymap[event.keyCode]) {
                 case "right":
                     mv(1, 0);
                     break;
@@ -219,7 +227,9 @@ var Board = (function () {
                     rt(-1);
                     break;
             }
-        }, false);
+        }).bind(this);
+
+        this.getElem().addEventListener('keydown', this.keyListener, false);
     };
 
     // spawn random nowBlock at top of the field.
@@ -285,6 +295,8 @@ var Board = (function () {
     // Note. each step of descendant search uses 'maximum munch' policy
     Board.prototype.getElem = function (sels) {
         var now = document.getElementById(this.divid);
+        if (sels === undefined) return now;
+
         sels.split(' ').forEach(function (sel) {
             switch (sel[0]) {
                 case '.': // class
