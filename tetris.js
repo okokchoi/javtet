@@ -113,6 +113,8 @@ var Board = (function () {
 
     // this function is not enumerable
     // return new copy of randomly pick blocks
+    // FIXME this function is dangerous, it returns shallow copy of vector array
+    // when using return value of this function, it should be read - only.
     Object.defineProperty(Board.prototype.blocks, "random", {
         value: function () {
             return Board.prototype.blocks.pickRandomEnum().slice();
@@ -144,6 +146,7 @@ var Board = (function () {
         var laterBlock, ok;
         ok = this.oktoFill.bind(this);
         laterBlock = this.nowBlock.slice().map(function (v) {
+            // v should be used READ ONLY
             var m = v.add(move);
             return ok(m) ? m : null;
         });
@@ -164,6 +167,7 @@ var Board = (function () {
         anchor = this.nowBlock[0].copy();
 
         laterBlock = this.nowBlock.slice().map(function (v) {
+            // v should be READ ONLY
             v = v.subtract(anchor);
             v.y = -[v.x, v.x = v.y][0]; // swap
             return v.multiplyBy(dir).addTo(anchor);
@@ -313,7 +317,7 @@ var Board = (function () {
         }
 
         // current block
-        fc = this.fillCode;
+        fc = String.fromCharCode(this.fillCode);
         h = this.height;
         ok = this.oktoFill.bind(this);
         this.nowBlock.forEach(function (v, i) {
