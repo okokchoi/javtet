@@ -88,8 +88,8 @@ var Board = (function () {
     }
 
     // static standard tiles
-    Board.prototype.fillChar = '■';
-    Board.prototype.emptyChar = '□';
+    Board.prototype.fillCode = 0x25A0;
+    Board.prototype.emptyCode = 0x25A1;
 
     // static standard block forms
     // the first point is the anchor for rotation
@@ -305,14 +305,15 @@ var Board = (function () {
             tr = document.createElement("tr");
             for (i = 0; i < this.width; i += 1) {
                 td = document.createElement("td");
-                td.textContent = this.cells[j][i] ? this.fillChar : this.emptyChar;
+                var code = this.cells[j][i] ? this.fillCode : this.emptyCode;
+                td.textContent = String.fromCharCode(code);
                 tr.appendChild(td);
             }
             newWell.appendChild(tr);
         }
 
         // current block
-        fc = this.fillChar;
+        fc = this.fillCode;
         h = this.height;
         ok = this.oktoFill.bind(this);
         this.nowBlock.forEach(function (v) {
