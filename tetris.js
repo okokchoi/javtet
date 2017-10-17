@@ -347,11 +347,3 @@ var Board = (function () {
 
     return Board;
 }());
-
-var board;
-var handle;
-
-window.onload = function () {
-    board = new Board(6, 10);
-    board.print();
-}
