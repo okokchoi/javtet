@@ -316,9 +316,14 @@ var Board = (function () {
         fc = this.fillCode;
         h = this.height;
         ok = this.oktoFill.bind(this);
-        this.nowBlock.forEach(function (v) {
+        this.nowBlock.forEach(function (v, i) {
             if (ok(v) && v.y < h) {
                 newWell.children[h - 1 - v.y].children[v.x].textContent = fc;
+
+                if (i == 0) {
+                    newWell.children[h - 1 - v.y].children[v.x].style.color = "red";
+
+                }
             }
         });
 

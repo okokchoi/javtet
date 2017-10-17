@@ -1,0 +1,10 @@
+.tetris {
+    border-style: groove;
+    padding: 5px 5px 5px 5px;
+}
+
+.tetris .well {
+    color: black;
+    border-style: solid;
+    border-width: thin;
+}
