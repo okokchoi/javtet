@@ -5,16 +5,40 @@
     <link rel="stylesheet" type="text/css" href="tetris.css">
     <script src="vector.js"></script>
     <script src="tetris.js"></script>
+    <style>
+        body>div {
+            float: left;
+        }
+
+    </style>
 </head>
 
 <body>
     <div id="tetris"></div>
+    <div id="tetris2"></div>
     <script>
         var board, board2;
 
         window.onload = function() {
-            board = new Board(6, 10);
+            board = new Board(6, 10, "tetris", {
+                68: "right",
+                65: "left",
+                83: "down",
+                87: "up",
+                74: "rotate",
+                76: "etator"
+            });
             board.print();
+
+            board2 = new Board(6, 10, "tetris2", {
+                34: "right",
+                46: "left",
+                35: "down",
+                36: "up",
+                100: "rotate",
+                102: "etator"
+            });
+            board2.print();
         }
 
     </script>
