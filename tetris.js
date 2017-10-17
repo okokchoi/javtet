@@ -359,3 +359,11 @@ var Board = (function () {
 
     return Board;
 }());
+
+/* reference to look for candidate tile character
+ https://en.wikipedia.org/wiki/Geometric_Shapes#Font_coverage
+ https://en.wikipedia.org/wiki/Block_Elements
+ https://en.wikipedia.org/wiki/Box_Drawing
+ https://en.wikipedia.org/wiki/Semigraphics
+ https://en.wikipedia.org/wiki/Tombstone_(typography)
+ */
